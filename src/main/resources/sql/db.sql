@@ -2,8 +2,8 @@
 CREATE USER hei_processing WITH PASSWORD 'hei1234';
 
 -- 2. Création de la base de données (si non existante)
--- CREATE DATABASE hei_prog3;
--- \c hei_prog3; -- Se connecter à la base si vous utilisez psql
+CREATE DATABASE hei_prog3;
+ \c push_down; -- Se connecter à la base
 
 -- 3. Attribution des privilèges de connexion
 GRANT CONNECT ON DATABASE postgres TO hei_processing;
