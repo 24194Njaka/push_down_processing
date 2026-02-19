@@ -8,14 +8,21 @@ import java.sql.Connection;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        Dotenv dotenv = Dotenv.load();
-        try (Connection conn = DBConnection.getConnection(dotenv)) {
-            if (conn != null) {
-                System.out.println("La base de données est prête pour le Push-down processing !");
-            }
+        try (Connection conn = DBConnection.getConnection()) {
+            System.out.println("Connecté à : " + conn.getMetaData().getURL());
+
+            // Test de la Question 1
+            DataRetriever retriever = new DataRetriever();
+            System.out.println("--- Liste des factures ---");
+            retriever.findInvoiceTotals().forEach(System.out::println);
+
         } catch (Exception e) {
-            throw  new RuntimeException("Erreur lors de la connexion", e);
+            System.err.println("Erreur : " + e.getMessage());
         }
+
+
+        DataRetriever dataRetriever = new DataRetriever();
+        dataRetriever.findInvoiceTotals();
 
 
 
