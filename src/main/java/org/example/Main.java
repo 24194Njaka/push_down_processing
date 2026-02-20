@@ -1,7 +1,5 @@
 package org.example;
 
-import io.github.cdimascio.dotenv.Dotenv;
-
 import java.sql.Connection;
 import java.util.List;
 
@@ -14,9 +12,12 @@ public class Main {
         DataRetriever dataRetriever = new DataRetriever();
 
             // Test de la Question 2
-        System.out.println("--- Liste des factures ---");
-        List<InvoiceTotal> totals = dataRetriever.findConfirmedAndPaidInvoiceTotals();
-        totals.forEach(System.out::println);
+//        System.out.println("--- Liste des factures ---");
+//        List<InvoiceTotal> totals = dataRetriever.findConfirmedAndPaidInvoiceTotals();
+//        totals.forEach(System.out::println);
+            InvoiceStatusTotal totals = dataRetriever.computeStatusTotals();
+            System.out.println(totals);
+
 
 
         } catch (Exception e) {

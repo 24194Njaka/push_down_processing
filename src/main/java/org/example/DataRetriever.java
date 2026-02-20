@@ -12,12 +12,11 @@ public class DataRetriever {
     public List<InvoiceTotal> findInvoiceTotals() {
         List<InvoiceTotal> list = new ArrayList<>();
         String sql = """
-    SELECT i.id, i.customer_name, i.status, 
-           SUM(il.quantity * il.unit_price) AS total_amount
-    FROM invoice i
-    JOIN invoice_line il ON i.id = il.invoice_id
-    GROUP BY i.id, i.customer_name, i.status
-    ORDER BY i.id;
+      SELECT i.id, i.customer_name, i.status,SUM(il.quantity * il.unit_price) AS total_amount
+                    FROM invoice i
+                    JOIN invoice_line il ON i.id = il.invoice_id
+                    GROUP BY i.id, i.customer_name,i.status
+                    ORDER BY i.id;
     """;
 
 
@@ -40,15 +39,16 @@ public class DataRetriever {
 
     }
 
-    public List<InvoiceTotal> findConfirmedAndPaidInvoiceTotals(){
+    public List<InvoiceTotal> findConfirmedAndPaidInvoiceTotals() {
         List<InvoiceTotal> list = new ArrayList<>();
-        String  sql = """
+        String sql =
+                """
          SELECT i.id, i.customer_name, i.status,SUM(il.quantity * il.unit_price) AS total_amount
-    FROM invoice i
-    JOIN invoice_line il ON i.id = il.invoice_id
-    WHERE i.status IN ('CONFIRMED', 'PAID')
-    GROUP BY i.id, i.customer_name, i.status
-    ORDER BY i.id;
+                    FROM invoice i
+                    JOIN invoice_line il ON i.id = il.invoice_id
+                    where  i.status IN ('CONFIRMED', 'PAID')
+                    GROUP BY i.id, i.customer_name,i.status
+                    ORDER BY i.id;
         """;
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
@@ -62,15 +62,57 @@ public class DataRetriever {
                 );
                 list.add(invoiceTotal);
             }
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return list;
+    }
+
+
+    public InvoiceStatusTotal computeStatusTotals(){
+        String sql = """
+        SELECT sum(case when i.status = 'PAID' then il.quantity * il.unit_price else 0 end) as total_paid,
+               sum(case when i.status = 'CONFIRMED' then il.quantity * il.unit_price else 0 end) as total_confirmed,
+               sum(case when i.status = 'DRAFT' then il.quantity * il.unit_price else 0 end) as total_draft
+        FROM invoice i
+        JOIN invoice_line il ON i.id = il.invoice_id;
+        """;
+
+        try(
+             Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery()) {
+            if(rs.next()){
+                return new InvoiceStatusTotal(
+                        rs.getDouble("total_paid"),
+                        rs.getDouble("total_confirmed"),
+                        rs.getDouble("total_draft")
+
+                );
+            }
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+
 
     }
 
 
 
 
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
