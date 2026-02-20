@@ -1,50 +1,22 @@
 package org.example;
 
-import java.sql.Connection;
 import java.util.List;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        try (Connection conn = DBConnection.getConnection()) {
-            System.out.println("Connecté à : " + conn.getMetaData().getURL());
         DataRetriever dataRetriever = new DataRetriever();
 
-            // Test de la Question 2
+        // Q2
 //        System.out.println("--- Liste des factures ---");
-//        List<InvoiceTotal> totals = dataRetriever.findConfirmedAndPaidInvoiceTotals();
-//        totals.forEach(System.out::println);
+//        dataRetriever.findConfirmedAndPaidInvoiceTotals().forEach(System.out::println);
 
+        // Q3
+//        System.out.println(dataRetriever.computeStatusTotals());
 
-            // question 3
+        // Q4
+//        System.out.println(dataRetriever.computeWeightedTurnover());
 
-//            InvoiceStatusTotal totals = dataRetriever.computeStatusTotals();
-//            System.out.println(totals);
-
-            //question 4
-
-//            Double turnover = dataRetriever.computeWeightedTurnover();
-//            System.out.println(turnover);
-
-
-
-
-
-
-
-
-
-
-        } catch (Exception e) {
-            System.err.println("Erreur : " + e.getMessage());
-        }
-
-
-
-
-
-
-
+        // Q5
+        dataRetriever.findInvoiceTaxSummaries().forEach(System.out::println);
     }
 }

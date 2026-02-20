@@ -125,6 +125,43 @@ public class DataRetriever {
         }
         return null;
     }
+
+    public  List<InvoiceTaxSummary> findInvoiceTaxSummaries() {
+        List<InvoiceTaxSummary> list = new ArrayList<>();
+
+        String sql = """
+                  SELECT\s
+                            i.id,
+                            SUM(il.quantity * il.unit_price) AS total_ht,
+                            SUM(il.quantity * il.unit_price) * (t.rate / 100) AS total_tva,
+                            SUM(il.quantity * il.unit_price) * (1 + t.rate / 100) AS total_ttc
+                        FROM invoice i
+                        JOIN invoice_line il ON i.id = il.invoice_id
+                        JOIN tax_config t ON t.id = 1
+                        GROUP BY i.id, t.rate
+                        ORDER BY i.id
+                """;
+        try(Connection conn = DBConnection.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();){
+            while (rs.next()){
+                list.add(new InvoiceTaxSummary(
+                    rs.getInt("id"),
+                    rs.getDouble("total_ht"),
+                    rs.getDouble("total_tva"),
+                    rs.getDouble("total_ttc")
+                ));
+            }
+
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+        return list;
+    }
+
+
+
+
 }
 
 
