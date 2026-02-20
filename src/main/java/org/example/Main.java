@@ -15,8 +15,24 @@ public class Main {
 //        System.out.println("--- Liste des factures ---");
 //        List<InvoiceTotal> totals = dataRetriever.findConfirmedAndPaidInvoiceTotals();
 //        totals.forEach(System.out::println);
-            InvoiceStatusTotal totals = dataRetriever.computeStatusTotals();
-            System.out.println(totals);
+
+
+            // question 3
+
+//            InvoiceStatusTotal totals = dataRetriever.computeStatusTotals();
+//            System.out.println(totals);
+
+            //question 4
+
+//            Double turnover = dataRetriever.computeWeightedTurnover();
+//            System.out.println(turnover);
+
+
+
+
+
+
+
 
 
 

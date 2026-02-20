@@ -99,10 +99,42 @@ public class DataRetriever {
     }
 
 
+    public  Double computeWeightedTurnover() {
+        String sql = """
+                      SELECT SUM(
+                           CASE i.status
+                               WHEN 'PAID'      THEN il.quantity * il.unit_price * 1.0
+                               WHEN 'CONFIRMED' THEN il.quantity * il.unit_price * 0.5
+                               WHEN 'DRAFT'     THEN il.quantity * il.unit_price * 0.0
+                               ELSE 0
+                           END
+                       ) AS revenus_price
+                       FROM invoice_line il
+                       JOIN invoice i ON i.id = il.invoice_id
+                
+                """;
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getDouble("revenus_price");
+            }
 
-
-
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
 }
+
+
+
+
+
+
+
+
+
 
 
 
