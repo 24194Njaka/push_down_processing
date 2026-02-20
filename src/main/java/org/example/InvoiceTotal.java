@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.Locale;
+
 public class InvoiceTotal {
     private Integer invoiceId;
     private String customerName;
@@ -13,6 +15,7 @@ public class InvoiceTotal {
         this.status = status;
         this.total = total;
     }
+
 
     public Integer getInvoiceId() {
         return invoiceId;
@@ -41,11 +44,10 @@ public class InvoiceTotal {
 
     @Override
     public String toString() {
-        return "InvoiceTotal{" +
-                "invoiceId=" + invoiceId +
-                ", customerName='" + customerName + '\'' +
-                ", status=" + status +
-                ", total=" + total +
-                '}';
+        return invoiceId + " | " + customerName + " | " + status + " | "
+                + String.format(Locale.US, "%.2f", total);
     }
+
+
+
 }
